@@ -12,7 +12,7 @@
 #include "TMinuit.h"
 #include "TList.h"
 #include "TPad.h"
-#include <numeric>
+
 #include <cassert>
 
 typedef TMatrixTSym<double>	TMatrixDSym;
@@ -23,9 +23,6 @@ TH1F *hlayer3 = new TH1F("hlayer3","layer3;z [cm]; counts",100/0.0150,-50,50);
 TH1F *hresid1 = new TH1F("hresid1","resid1; z_{hit}-z_{true} [cm]; events",100,-0.1,0.1);
 TH1F *hresid2 = new TH1F("hresid2","resid2; z_{hit}-z_{true} [cm]; events",100,-0.1,0.1);
 TH1F *hresid3 = new TH1F("hresid3","resid3; z_{hit}-z_{true} [cm]; events",100,-0.1,0.1);
-TH1F *hresidpull1 = new TH1F("hresidpull1","pull1; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
-TH1F *hresidpull2 = new TH1F("hresidpull2","pull2; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
-TH1F *hresidpull3 = new TH1F("hresidpull3","pull3; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
 TH1F *hpt = new TH1F("hpt","; p_{T} [GeV]",100,0,10);
 TH1F *hptpull = new TH1F("hptpull","; (p_{T}^{meas} - p_{T}^{true})/#sigma",100,-10,10);
 
@@ -259,30 +256,26 @@ int reconstructHitsWeighted(TObjArray* clusters)
     int tot_sig=0;
     std::vector<int> sig_vec;
     double z=0;
-    double zerr=0;
     for(int j = 0 ; j < c->nStrips() ; ++j) {
       int sig=c->signal(j);
       sig_vec.push_back(sig);
       tot_sig=tot_sig+sig;
       }
-     double sum_weigth=accumulate(sig_vec.begin(),sig_vec.end(),0)/tot_sig;
      for(int i=0;i<sig_vec.size();i++){
      z=z+(c->ZofFirstStrip()+i*c->pitch())*(sig_vec[i]/tot_sig);
-     zerr=zerr+pow(sig_vec[i]/tot_sig,2)/sum_weigth;
-     
        
     }
     //z=z/sig_vec.size();
     sig_vec.clear();
     c->SetZ(z);
-    c->setErrZ(sqrt(zerr*pow(c->pitch()/2,2)));
+    c->setErrZ(0);
   }
   return clusters->GetEntriesFast();
 }
 
 int reconstructHits(TObjArray* clusters) {
-  //return reconstructHitsBinary(clusters);
-  return reconstructHitsWeighted(clusters);
+  return reconstructHitsBinary(clusters);
+  //return reconstructHitsWeighted(clusters);
 }
   
 
@@ -314,19 +307,13 @@ void plotResdiuals(TObjArray* clusters) {
     double x = c->X();
     //fill residual plots; x-position of layers hardcoded!!!
     double zorig = getTrueZ(x);    
-    if(c->layer() == 1){
+    if(c->layer() == 1)
       hresid1->Fill(zorig-c->Z());
-      hresidpull1->Fill((zorig-c->Z())/c->errZ());
-    }
     else {
-      if(c->layer() == 2){
+      if(c->layer() == 2)
 	hresid2->Fill(zorig-c->Z());
-	hresidpull2->Fill((zorig-c->Z())/c->errZ());
-      }
-      else if(c->layer() == 3){
+      else if(c->layer() == 3)
 	hresid3->Fill(zorig-c->Z());
-	hresidpull3->Fill((zorig-c->Z())/c->errZ());
-      }
     }
   }
 }
@@ -465,7 +452,7 @@ void tracking2()
     }
   }
   TCanvas* c = new TCanvas("c");
-  c->Divide(3,3);
+  c->Divide(3,2);
   c->cd(1);
   hlayer1->Draw("hist");
   c->cd(2);
@@ -478,12 +465,6 @@ void tracking2()
   hresid2->Draw();
   c->cd(6);
   hresid3->Draw();
-  c->cd(7);
-  hresidpull1->Draw();
-  c->cd(8);
-  hresidpull2->Draw();
-  c->cd(9);
-  hresidpull3->Draw();
 
   if(doFit) {
     TCanvas* c2 = new TCanvas("c2");
