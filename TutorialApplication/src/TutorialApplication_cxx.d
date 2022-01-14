@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-./src/TutorialApplication_cxx.so: /home/ubuntuuser/geantx/TutorialApplication/include/TutorialApplication.hh
+./src/TutorialApplication_cxx.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TutorialApplication.hh
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TDatabasePDG.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TParticlePDG.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TNamed.h
@@ -99,7 +99,7 @@
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/GuiTypes.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/Buttons.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TQObject.h
-./src/TutorialApplication_cxx.so: /home/ubuntuuser/geantx/TutorialApplication/include/TutorialStack.hh
+./src/TutorialApplication_cxx.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TutorialStack.hh
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TClonesArray.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TParticle.h
 ./src/TutorialApplication_cxx.so: /usr/local/root532/include/TVirtualGeoTrack.h

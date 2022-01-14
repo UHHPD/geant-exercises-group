@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-./src/TutorialMainFrame_cxx.so: /home/ubuntuuser/geantx/TutorialApplication/include/TutorialMainFrame.hh
+./src/TutorialMainFrame_cxx.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TutorialMainFrame.hh
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TGFrame.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TGWindow.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TGObject.h
@@ -46,7 +46,7 @@
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TSeqCollection.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TCollection.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TIterator.h
-./src/TutorialMainFrame_cxx.so: /home/ubuntuuser/geantx/TutorialApplication/include/TutorialApplication.hh
+./src/TutorialMainFrame_cxx.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TutorialApplication.hh
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TDatabasePDG.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TParticlePDG.h
 ./src/TutorialMainFrame_cxx.so: /usr/local/root532/include/TObjArray.h

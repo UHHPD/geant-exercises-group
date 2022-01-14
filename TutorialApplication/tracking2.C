@@ -14,6 +14,7 @@
 #include "TPad.h"
 #include <numeric>
 #include <cassert>
+#include <cmath>
 
 typedef TMatrixTSym<double>	TMatrixDSym;
 
@@ -26,8 +27,10 @@ TH1F *hresid3 = new TH1F("hresid3","resid3; z_{hit}-z_{true} [cm]; events",100,-
 TH1F *hresidpull1 = new TH1F("hresidpull1","pull1; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
 TH1F *hresidpull2 = new TH1F("hresidpull2","pull2; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
 TH1F *hresidpull3 = new TH1F("hresidpull3","pull3; z_{hit}-z_{true}/z_{err}; events",100,-5,5);
-TH1F *hpt = new TH1F("hpt","; p_{T} [GeV]",100,0,10);
-TH1F *hptpull = new TH1F("hptpull","; (p_{T}^{meas} - p_{T}^{true})/#sigma",100,-10,10);
+TH1F *hpt = new TH1F("hpt","; p_{T} [GeV]",100,0,50);
+TH1F *hptpull = new TH1F("hptpull","; (p_{T}^{meas} - p_{T}^{true})/#sigma",100,-20000,20000);
+TH1F *hpterr= new TH1F("hpterr","\#sigma_{P_{T}}",100,0,0.02);
+TH1F *hptdiff= new TH1F("hptdiff","\P_{T,mes}-P_{T,real}",100,-5,5);
 
 class Cluster : public TVector3 {
 public:
@@ -77,10 +80,12 @@ public:
   
 
 
-  double pt() const { return 0;}//needs changes
+  double pt() const { return TMath::Abs(charge()*r()*Track::B()*x0()/z0()/100);} 
+  //divided by 100 because magnitude of pt wouldn't work out, maybe because r is in cm?
+  //Giving units in the excercise sheet would be appreciated.
 
   double rErr() const { return sqrt(fCov(0,0));}
-  double ptErr() const { return 1000;}//needs changes
+  double ptErr() const { return TMath::Abs(charge()*rErr()*Track::B()*x0()/z0()/100);}
 
 
   double cov(int i, int j) const { return fCov(i,j);}
@@ -93,13 +98,11 @@ public:
   
   void setCov(int i, int j, double c) { fCov(i,j) = c;}
   
-  double x(double lambda) const { return 0;}//needs changes
-  double z(double lambda) const { return 0;}//needs changes
+  double x(double lambda) const { return x0()+charge()*r()*sin(charge()*lambda+phi0());}
+  double z(double lambda) const { return z0()-charge()*r()*cos(charge()*lambda+phi0());}
   double y(double) const { return 0; }
   
-  double lambdaFromX(double posx) const { //needs changes
-    return 0;
-  }
+  double lambdaFromX(double posx) const {return (asin((posx-x0())/(charge()*r()))-phi0())/charge();}
 
   static double B() {
     TutorialApplication* app = (TutorialApplication*)TutorialApplication::Instance();
@@ -143,7 +146,7 @@ unsigned char getSignal(const std::string& n)
   int c = app->depEinNode(n) * 600000;
   //if(c > 0) std::cout << "getSignal for " << n << " :" << c << std::endl;
   //add noise
-  c += gRandom->Gaus(0,3);
+  //c += gRandom->Gaus(0,3);
   //noise cut
   int noisecut = 15;
   if( c < noisecut ) return 0;
@@ -404,11 +407,11 @@ void tracking2()
   TutorialApplication* app = (TutorialApplication*)TutorialApplication::Instance();
   // position of silicon layers in x   
   double pos1 = -45.0;
-  double pos2 = -30.0;
-  double pos3 = 45.0; 
+  double pos2 = 20;
+  double pos3 = 45; 
   double pitch = 0.0150;
-  double materialLength = 0.05;//length of support structures
-  double Bfield = 2.0;//magnetic field in T
+  double materialLength = 0.005;//length of support structures
+  double Bfield = 6.0;//magnetic field in T
   TString geom("geometry/tracker2(");
   geom+=pos1; geom.Append(",");
   geom+=pos2; geom.Append(",");
@@ -418,11 +421,11 @@ void tracking2()
   geom+=Bfield; geom.Append(")"); 
   app->InitMC(geom); 
 
-  bool doFit = false;
+  bool doFit = true;
 
   // define particle and control parameters of loop   
-  unsigned int nevt = 400;
-  double p = 1;
+  unsigned int nevt = 500;
+  double p = 5;
   app->SetPrimaryPDG(-13);    // +/-11: PDG code of e+/- 
   /* other PDG codes     22: Photon    +-13: muon   
                      +/-211: pion   +/-2212: proton     */
@@ -459,6 +462,8 @@ void tracking2()
 	if(draw) t->helix()->Draw();
 	hpt->Fill(t->pt());
 	hptpull->Fill((t->pt()-p)/t->ptErr());
+	hpterr->Fill(t->ptErr());
+	hptdiff->Fill(t->pt()-p*t->x0()/t->z0());
       } else {
 	std::cout << "Warning: Not enough hits for track fit.\n";
       }
@@ -487,10 +492,15 @@ void tracking2()
 
   if(doFit) {
     TCanvas* c2 = new TCanvas("c2");
-    c2->Divide(2,1);
+    c2->Divide(2,2);
     c2->cd(1);
     hpt->Draw();
     c2->cd(2);
     hptpull->Draw();
+    c2->cd(3);
+    hpterr->Draw();
+    //c2->cd(4);
+    //hptdiff->Draw();
+    
   }
 }

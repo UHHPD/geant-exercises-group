@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-./src/TGeomWrapper_cc.so: /home/ubuntuuser/geantx/TutorialApplication/include/TGeomWrapper.hh
+./src/TGeomWrapper_cc.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TGeomWrapper.hh
 ./src/TGeomWrapper_cc.so: /usr/local/root532/include/TGeoMCGeometry.h
 ./src/TGeomWrapper_cc.so: /usr/local/root532/include/TVirtualMCGeometry.h
 ./src/TGeomWrapper_cc.so: /usr/local/root532/include/TNamed.h

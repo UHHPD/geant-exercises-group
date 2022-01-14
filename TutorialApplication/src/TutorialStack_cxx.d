@@ -1,7 +1,7 @@
 
 # DO NOT DELETE
 
-./src/TutorialStack_cxx.so: /home/ubuntuuser/geantx/TutorialApplication/include/TutorialStack.hh
+./src/TutorialStack_cxx.so: /home/ubuntuuser/geant-exercises-group/TutorialApplication/include/TutorialStack.hh
 ./src/TutorialStack_cxx.so: /usr/local/root532/include/TVirtualMCStack.h
 ./src/TutorialStack_cxx.so: /usr/local/root532/include/TObject.h
 ./src/TutorialStack_cxx.so: /usr/local/root532/include/Rtypes.h
