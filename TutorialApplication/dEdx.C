@@ -9,7 +9,7 @@ void dEdx()
 
   TH1F* hloss = new TH1F("hloss","; -dE [MeV]",100,0,10);
   TGraph* gdEdx =  new TGraph();
-  double momentum = 1;
+  double momentum = 100;
   for(int i = 0 ; i < nev ; ++i) {
     app->SetPrimaryMomentum(momentum);
     //hprim->Reset();
